@@ -11,7 +11,8 @@ A lightweight, production-ready Next.js starter template with multi-theme suppor
 - 🚀 Optimized metadata & SEO-ready layout
 
 ## Preview
-Coming soon…
+<img width="1904" height="837" alt="image" src="https://github.com/user-attachments/assets/6fb66ca7-24be-435f-a747-ed4e40f896f9" />
+
 
 ## Getting Started
 ```bash
