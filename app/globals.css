@@ -88,13 +88,6 @@
   --foreground: #ededed;
 }
 
-/* Example additional theme */
-:root[data-theme='forest'] {
-  --background: #0b2a1a;
-  --foreground: #e6f6ef;
-  /* add accent tokens if needed: --accent: ... */
-}
-
 body {
   font-family: var(--font-ubuntu);
 }

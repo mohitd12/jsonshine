@@ -1,24 +1,20 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 
-type User = { id: string; name: string } | null;
-
-type AppState = {
-  user: User;
-  setUser: (u: User) => void;
-};
+type AppState = {};
 
 const makeStore = () =>
   create<AppState>()(
     devtools(
       persist(
         (set) => ({
-          user: null,
-          setUser: (u) => set({ user: u }),
+          // ...write here
         }),
         {
           name: 'app-storage',
-          partialize: (s) => ({ user: s.user }), // persist only user
+          partialize: (s) => ({
+            // ...add props only to persist here
+          }),
         }
       )
     )

@@ -17,55 +17,6 @@ export default function ThemeToggle() {
 
   if (!mounted) {
     return null;
-    // Solution to avoid layout shifting
-    // return (
-    //   <div className="flex gap-2 items-center" aria-hidden>
-    //     <span className="text-sm" style={{ color: 'var(--foreground)' }}>
-    //       Theme:
-    //     </span>
-    //     <div
-    //       className="inline-flex items-center gap-2 px-2 py-1 rounded-md"
-    //       style={{ border: '1px solid transparent' }}>
-    //       <span
-    //         style={{
-    //           display: 'inline-block',
-    //           padding: '6px 8px',
-    //           borderRadius: 8,
-    //           background: 'var(--background)',
-    //           color: 'var(--foreground)',
-    //           fontSize: '0.875rem',
-    //           minWidth: '40px',
-    //           textAlign: 'center',
-    //         }}>
-    //         {(current ?? 'light') === 'dark'
-    //           ? '\u00A0Dark\u00A0'
-    //           : '\u00A0Light\u00A0'}
-    //       </span>
-
-    //       {/* two non-selected placeholders */}
-    //       <span
-    //         style={{
-    //           display: 'inline-block',
-    //           padding: '6px 10px',
-    //           borderRadius: 8,
-    //           color: 'var(--foreground)',
-    //           fontSize: '0.875rem',
-    //         }}>
-    //         Dark
-    //       </span>
-    //       <span
-    //         style={{
-    //           display: 'inline-block',
-    //           padding: '6px 10px',
-    //           borderRadius: 8,
-    //           color: 'var(--foreground)',
-    //           fontSize: '0.875rem',
-    //         }}>
-    //         Forest
-    //       </span>
-    //     </div>
-    //   </div>
-    // );
   }
 
   return (
@@ -80,9 +31,6 @@ export default function ThemeToggle() {
         </ToggleGroupItem>
         <ToggleGroupItem value="dark" aria-label="Toggle dark theme">
           Dark
-        </ToggleGroupItem>
-        <ToggleGroupItem value="forest" aria-label="Toggle forest theme">
-          Forest
         </ToggleGroupItem>
       </ToggleGroup>
     </div>
