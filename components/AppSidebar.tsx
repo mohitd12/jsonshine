@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import {
   Sidebar,
@@ -13,8 +13,16 @@ import { Button } from './ui/button';
 import { ButtonGroup } from './ui/button-group';
 import { CopyIcon } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { EditorMode, useAppStore } from '@/stores/useAppStore';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const editorMode = useAppStore((state) => state.editorMode);
+  const setEditorMode = useAppStore((state) => state.setEditorMode);
+
+  const onChangeMode = (mode: EditorMode) => {
+    setEditorMode(mode);
+  };
+
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -39,7 +47,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <ToggleGroup
               type="single"
               className="w-full grid grid-cols-2 gap-0"
-              size="lg">
+              size="lg"
+              onValueChange={onChangeMode}
+              value={editorMode}>
               <ToggleGroupItem
                 value="code"
                 aria-label="Toggle Code mode"
