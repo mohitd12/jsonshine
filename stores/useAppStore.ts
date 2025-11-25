@@ -1,3 +1,4 @@
+import { formatJsonByDepth, getJsonDepth } from '@/lib/jsonUtils';
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 
@@ -15,6 +16,8 @@ type AppState = {
   toggleSidebarOpen: () => void;
   jsonValue: string | undefined;
   setJsonValue: (value: string | undefined) => void;
+  setMinifiedJsonValue: () => void;
+  setPrettyJsonValue: () => void;
 };
 
 const makeStore = () =>
@@ -34,6 +37,21 @@ const makeStore = () =>
           },
           setJsonValue: (value) => {
             set(() => ({ jsonValue: value }));
+          },
+          setMinifiedJsonValue: () => {
+            set((state) => ({
+              jsonValue: formatJsonByDepth(state.jsonValue, { level: 0 }),
+            }));
+          },
+          setPrettyJsonValue: () => {
+            set((state) => {
+              const depthLevel = getJsonDepth(state.jsonValue);
+              return {
+                jsonValue: formatJsonByDepth(state.jsonValue, {
+                  level: depthLevel,
+                }),
+              };
+            });
           },
         }),
         {

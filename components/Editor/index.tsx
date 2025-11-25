@@ -1,6 +1,7 @@
 import CodeView from './CodeView';
-import { EditorModes, useAppStore } from '@/stores/useAppStore';
 import TreeView from './TreeView';
+import { EditorModes, useAppStore } from '@/stores/useAppStore';
+import { formatJsonByDepth, getJsonDepth } from '@/lib/jsonUtils';
 
 const Editor = () => {
   const editorMode = useAppStore((state) => state.editorMode);
@@ -9,9 +10,19 @@ const Editor = () => {
 
   const onChangeJsonValue = (value: string | undefined) => {
     try {
-      setJsonValue(value);
+      if (value) {
+        const depthLevel = getJsonDepth(value);
+        const formatted = formatJsonByDepth(value, { level: depthLevel });
+        setJsonValue(formatted);
+      } else {
+        setJsonValue(undefined);
+      }
     } catch (error) {
-      console.log(error);
+      if (error instanceof SyntaxError) {
+        setJsonValue(value);
+      } else {
+        console.log(error);
+      }
     }
   };
 
@@ -20,7 +31,7 @@ const Editor = () => {
       {editorMode === EditorModes.CODE ? (
         <CodeView value={jsonValue} onChange={onChangeJsonValue} />
       ) : (
-        <TreeView value={{}} />
+        <TreeView value={JSON.parse(jsonValue || '{}')} />
       )}
     </div>
   );
