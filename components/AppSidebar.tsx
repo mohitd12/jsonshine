@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 
 import {
   Sidebar,
@@ -11,17 +11,35 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from './ui/button';
 import { ButtonGroup } from './ui/button-group';
-import { CopyIcon } from 'lucide-react';
+import { CheckIcon, CopyIcon } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { EditorMode, useAppStore } from '@/stores/useAppStore';
+import { copyJsonToClipboard } from '@/lib/jsonUtils';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const editorMode = useAppStore((state) => state.editorMode);
   const setEditorMode = useAppStore((state) => state.setEditorMode);
+  const jsonValue = useAppStore((state) => state.jsonValue);
+  const setMinifiedJsonValue = useAppStore(
+    (state) => state.setMinifiedJsonValue
+  );
+  const setPrettyJsonValue = useAppStore((state) => state.setPrettyJsonValue);
+  const [isJsonCopied, setIsJsonCopied] = useState(false);
 
   const onChangeMode = (mode: EditorMode) => {
     setEditorMode(mode);
   };
+
+  const onCopyJsonValue = useCallback(async () => {
+    const isJsonCopied = await copyJsonToClipboard(jsonValue!);
+
+    if (!isJsonCopied) return;
+
+    setIsJsonCopied(true);
+    setTimeout(() => {
+      setIsJsonCopied(false);
+    }, 950);
+  }, [jsonValue]);
 
   return (
     <Sidebar {...props}>
@@ -30,15 +48,36 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent className="p-2">
         <ButtonGroup className="w-full grid grid-cols-2">
-          <Button variant="outline" className="cursor-pointer" size="lg">
+          <Button
+            onClick={() => setMinifiedJsonValue()}
+            variant="outline"
+            className="cursor-pointer"
+            size="lg">
             Minify
           </Button>
-          <Button variant="outline" className="cursor-pointer" size="lg">
+          <Button
+            onClick={() => setPrettyJsonValue()}
+            variant="outline"
+            className="cursor-pointer"
+            size="lg">
             Prettify
           </Button>
         </ButtonGroup>
-        <Button variant="outline" className="cursor-pointer" size="lg">
-          <CopyIcon /> Copy JSON
+        <Button
+          onClick={() => onCopyJsonValue()}
+          variant="outline"
+          className="cursor-pointer disabled:opacity-100!"
+          size="lg"
+          disabled={isJsonCopied}>
+          {isJsonCopied ? (
+            <>
+              <CheckIcon /> Copied
+            </>
+          ) : (
+            <>
+              <CopyIcon /> Copy JSON
+            </>
+          )}
         </Button>
 
         <SidebarGroup className="p-0">
