@@ -14,7 +14,12 @@ import { ButtonGroup } from './ui/button-group';
 import { CheckIcon, CopyIcon } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { EditorMode, useAppStore } from '@/stores/useAppStore';
-import { copyJsonToClipboard } from '@/lib/jsonUtils';
+import {
+  copyJsonToClipboard,
+  formatJsonByDepth,
+  getJsonDepth,
+} from '@/lib/jsonUtils';
+import { getRandomJson } from '@/lib/utils';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const editorMode = useAppStore((state) => state.editorMode);
@@ -24,6 +29,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     (state) => state.setMinifiedJsonValue
   );
   const setPrettyJsonValue = useAppStore((state) => state.setPrettyJsonValue);
+  const setJsonValue = useAppStore((state) => state.setJsonValue);
   const [isJsonCopied, setIsJsonCopied] = useState(false);
 
   const onChangeMode = (mode: EditorMode) => {
@@ -41,12 +47,28 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     }, 950);
   }, [jsonValue]);
 
+  const onGenerateFakeJson = () => {
+    const fakeJsonValue = getRandomJson();
+    const depthLevel = getJsonDepth(fakeJsonValue);
+    const formatted = formatJsonByDepth(JSON.stringify(fakeJsonValue), {
+      level: depthLevel,
+    });
+    setJsonValue(formatted);
+  };
+
   return (
     <Sidebar {...props}>
       <SidebarHeader>
         <p className="p-2 bg-accent rounded-md">Tools</p>
       </SidebarHeader>
       <SidebarContent className="p-2">
+        <Button
+          onClick={onGenerateFakeJson}
+          variant="outline"
+          className="cursor-pointer"
+          size="lg">
+          Generate Fake JSON
+        </Button>
         <ButtonGroup className="w-full grid grid-cols-2">
           <Button
             onClick={() => setMinifiedJsonValue()}
