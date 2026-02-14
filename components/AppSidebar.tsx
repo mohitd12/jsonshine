@@ -20,13 +20,14 @@ import {
   getJsonDepth,
 } from '@/lib/jsonUtils';
 import { getRandomJson } from '@/lib/utils';
+import ImportData from './ImportData';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const editorMode = useAppStore((state) => state.editorMode);
   const setEditorMode = useAppStore((state) => state.setEditorMode);
   const jsonValue = useAppStore((state) => state.jsonValue);
   const setMinifiedJsonValue = useAppStore(
-    (state) => state.setMinifiedJsonValue
+    (state) => state.setMinifiedJsonValue,
   );
   const setPrettyJsonValue = useAppStore((state) => state.setPrettyJsonValue);
   const setJsonValue = useAppStore((state) => state.setJsonValue);
@@ -82,7 +83,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             variant="outline"
             className="cursor-pointer"
             size="lg">
-            Prettify
+            Shinify
           </Button>
         </ButtonGroup>
         <Button
@@ -124,6 +125,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 Tree
               </ToggleGroupItem>
             </ToggleGroup>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup className="p-0">
+          <SidebarGroupLabel className="p-0">Import Data</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <ImportData />
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
