@@ -1,13 +1,13 @@
 import { useRef, useState } from 'react';
 import { ChevronDownIcon, UploadIcon } from 'lucide-react';
 import { formatJsonByDepth, getJsonDepth } from '@/lib/jsonUtils';
-import { useAppStore } from '@/stores/useAppStore';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Button } from '@/components/ui/button';
 import ImportDataMenu from './ImportDataMenu';
+import { useAceEditor } from '@/context/AceEditorContext';
 
 export default function ImportData() {
-  const setJsonValue = useAppStore((state) => state.setJsonValue);
+  const { commands } = useAceEditor();
   const [isImportMenuOpen, setIsImportMenuOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -24,7 +24,7 @@ export default function ImportData() {
       return false;
     }
 
-    setJsonValue(formatted);
+    commands.setValue(formatted);
     return true;
   };
 

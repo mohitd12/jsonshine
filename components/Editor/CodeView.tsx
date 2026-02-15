@@ -9,6 +9,7 @@ import 'ace-builds/src-noconflict/theme-dracula';
 import 'ace-builds/src-noconflict/theme-monokai';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-min-noconflict/ext-searchbox';
+import { useAceEditor } from '@/context/AceEditorContext';
 
 const CodeView = ({
   value,
@@ -17,11 +18,14 @@ const CodeView = ({
   tabSize = 4,
   fontSize = 16,
 }: IAceEditorProps) => {
+  const { onEditorLoad } = useAceEditor();
+
   return (
     <ReactAceEditor
       mode="json"
       value={value}
       theme={theme}
+      onLoad={onEditorLoad}
       onChange={onChange}
       focus={true}
       showPrintMargin={false}
