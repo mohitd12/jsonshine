@@ -14,7 +14,7 @@ import { Field, FieldError, FieldGroup } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { formatJsonByDepth, getJsonDepth } from '@/lib/jsonUtils';
-import { useAppStore } from '@/stores/useAppStore';
+import { useAceEditor } from '@/context/AceEditorContext';
 
 type ImportByUrlModalProps = {
   open: boolean;
@@ -39,7 +39,7 @@ export default function ImportByUrlDialog({
   open,
   onToggleOpen,
 }: ImportByUrlModalProps) {
-  const setJsonValue = useAppStore((state) => state.setJsonValue);
+  const { commands } = useAceEditor();
   const [importUrl, setImportUrl] = useState('');
   const [isImportingUrl, setIsImportingUrl] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
@@ -71,7 +71,7 @@ export default function ImportByUrlDialog({
     }
 
     setImportError(null);
-    setJsonValue(formatted);
+    commands.setValue(formatted);
     return true;
   };
 

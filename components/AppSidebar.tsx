@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 
 import {
   Sidebar,
@@ -14,47 +14,17 @@ import { ButtonGroup } from './ui/button-group';
 import { CheckIcon, CopyIcon } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { EditorMode, useAppStore } from '@/stores/useAppStore';
-import {
-  copyJsonToClipboard,
-  formatJsonByDepth,
-  getJsonDepth,
-} from '@/lib/jsonUtils';
-import { getRandomJson } from '@/lib/utils';
 import ImportData from './ImportData';
+import { useAceEditor } from '@/context/AceEditorContext';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { commands } = useAceEditor();
   const editorMode = useAppStore((state) => state.editorMode);
   const setEditorMode = useAppStore((state) => state.setEditorMode);
-  const jsonValue = useAppStore((state) => state.jsonValue);
-  const setMinifiedJsonValue = useAppStore(
-    (state) => state.setMinifiedJsonValue,
-  );
-  const setPrettyJsonValue = useAppStore((state) => state.setPrettyJsonValue);
-  const setJsonValue = useAppStore((state) => state.setJsonValue);
-  const [isJsonCopied, setIsJsonCopied] = useState(false);
+  const isContentCopied = useAppStore((state) => state.isContentCopied);
 
-  const onChangeMode = (mode: EditorMode) => {
+  const onChangeEditorMode = (mode: EditorMode) => {
     setEditorMode(mode);
-  };
-
-  const onCopyJsonValue = useCallback(async () => {
-    const isJsonCopied = await copyJsonToClipboard(jsonValue!);
-
-    if (!isJsonCopied) return;
-
-    setIsJsonCopied(true);
-    setTimeout(() => {
-      setIsJsonCopied(false);
-    }, 950);
-  }, [jsonValue]);
-
-  const onGenerateFakeJson = () => {
-    const fakeJsonValue = getRandomJson();
-    const depthLevel = getJsonDepth(fakeJsonValue);
-    const formatted = formatJsonByDepth(JSON.stringify(fakeJsonValue), {
-      level: depthLevel,
-    });
-    setJsonValue(formatted);
   };
 
   return (
@@ -64,7 +34,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent className="p-2">
         <Button
-          onClick={onGenerateFakeJson}
+          onClick={commands.generateFake}
           variant="outline"
           className="cursor-pointer"
           size="lg">
@@ -72,14 +42,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </Button>
         <ButtonGroup className="w-full grid grid-cols-2">
           <Button
-            onClick={() => setMinifiedJsonValue()}
+            onClick={() => console.log('minify')}
             variant="outline"
             className="cursor-pointer"
             size="lg">
             Minify
           </Button>
           <Button
-            onClick={() => setPrettyJsonValue()}
+            onClick={() => console.log('Shinify')}
             variant="outline"
             className="cursor-pointer"
             size="lg">
@@ -87,12 +57,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </Button>
         </ButtonGroup>
         <Button
-          onClick={() => onCopyJsonValue()}
+          onClick={commands.copy}
           variant="outline"
           className="cursor-pointer disabled:opacity-100!"
           size="lg"
-          disabled={isJsonCopied}>
-          {isJsonCopied ? (
+          disabled={isContentCopied}>
+          {isContentCopied ? (
             <>
               <CheckIcon /> Copied
             </>
@@ -110,7 +80,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               type="single"
               className="w-full grid grid-cols-2 gap-0"
               size="lg"
-              onValueChange={onChangeMode}
+              onValueChange={onChangeEditorMode}
               value={editorMode}>
               <ToggleGroupItem
                 value="code"

@@ -1,4 +1,3 @@
-import { formatJsonByDepth, getJsonDepth } from '@/lib/jsonUtils';
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 
@@ -14,10 +13,8 @@ type AppState = {
   setEditorMode: (mode: EditorMode) => void;
   isSidebarOpen: boolean;
   toggleSidebarOpen: () => void;
-  jsonValue: string | undefined;
-  setJsonValue: (value: string | undefined) => void;
-  setMinifiedJsonValue: () => void;
-  setPrettyJsonValue: () => void;
+  isContentCopied: boolean;
+  setIsContentCopied: (isContentCopied: boolean) => void;
 };
 
 const makeStore = () =>
@@ -28,6 +25,7 @@ const makeStore = () =>
           editorMode: EditorModes.CODE,
           isSidebarOpen: false,
           jsonValue: undefined,
+          isContentCopied: false,
 
           setEditorMode: (mode: EditorMode) => {
             set(() => ({ editorMode: mode }));
@@ -35,23 +33,8 @@ const makeStore = () =>
           toggleSidebarOpen: () => {
             set((state) => ({ isSidebarOpen: !state.isSidebarOpen }));
           },
-          setJsonValue: (value) => {
-            set(() => ({ jsonValue: value }));
-          },
-          setMinifiedJsonValue: () => {
-            set((state) => ({
-              jsonValue: formatJsonByDepth(state.jsonValue, { level: 0 }),
-            }));
-          },
-          setPrettyJsonValue: () => {
-            set((state) => {
-              const depthLevel = getJsonDepth(state.jsonValue);
-              return {
-                jsonValue: formatJsonByDepth(state.jsonValue, {
-                  level: depthLevel,
-                }),
-              };
-            });
+          setIsContentCopied: (isContentCopied: boolean) => {
+            set(() => ({ isContentCopied }));
           },
         }),
         {
@@ -60,9 +43,9 @@ const makeStore = () =>
             isSidebarOpen: state.isSidebarOpen,
             editorMode: state.editorMode,
           }),
-        }
-      )
-    )
+        },
+      ),
+    ),
   );
 
 // export the store instance
